@@ -14,8 +14,23 @@ const catalog = [
 
 app.get('/catalog/items', (req, res) => {
   const { category, q } = req.query;
-  const rawLimit = Number.parseInt(String(req.query.limit || '20'), 10);
-  const limit = Number.isFinite(rawLimit) ? Math.max(1, Math.min(100, rawLimit)) : 20;
+  let limit = 20;
+
+  if (typeof req.query.limit !== 'undefined') {
+    const limitParam = req.query.limit;
+    if (typeof limitParam !== 'string' || !/^\d+$/.test(limitParam)) {
+      res.status(400).json({ message: 'limit must be an integer between 1 and 100' });
+      return;
+    }
+
+    const parsedLimit = Number.parseInt(limitParam, 10);
+    if (parsedLimit < 1 || parsedLimit > 100) {
+      res.status(400).json({ message: 'limit must be an integer between 1 and 100' });
+      return;
+    }
+
+    limit = parsedLimit;
+  }
 
   let items = [...catalog];
   if (typeof category === 'string' && category.trim()) {
