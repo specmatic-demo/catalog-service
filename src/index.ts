@@ -1,18 +1,24 @@
-'use strict';
-
-const express = require('express');
+import express, { type Request, type Response } from 'express';
 
 const app = express();
 const host = process.env.CATALOG_HOST || '0.0.0.0';
 const port = Number.parseInt(process.env.CATALOG_PORT || '9000', 10);
 
-const catalog = [
+type CatalogItem = {
+  sku: string;
+  name: string;
+  category: string;
+  available: boolean;
+  listPrice: number;
+};
+
+const catalog: CatalogItem[] = [
   { sku: 'SKU-IPHONE', name: 'iPhone 15', category: 'Phones', available: true, listPrice: 799.0 },
   { sku: 'SKU-PIXEL', name: 'Pixel 8', category: 'Phones', available: true, listPrice: 699.0 },
   { sku: 'SKU-HEADPHONE', name: 'Noise Cancelling Headphones', category: 'Audio', available: false, listPrice: 199.0 }
 ];
 
-app.get('/catalog/items', (req, res) => {
+app.get('/catalog/items', (req: Request, res: Response) => {
   const { category, q } = req.query;
   let limit = 20;
 
@@ -47,7 +53,7 @@ app.get('/catalog/items', (req, res) => {
   res.status(200).json(items.slice(0, limit));
 });
 
-app.get('/catalog/items/:sku', (req, res) => {
+app.get('/catalog/items/:sku', (req: Request, res: Response) => {
   const item = catalog.find((entry) => entry.sku === req.params.sku);
   if (item) {
     res.status(200).json(item);
