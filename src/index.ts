@@ -1,23 +1,9 @@
 import express, { type Request, type Response } from 'express';
+import type { CatalogAvailability, CatalogItem } from './types';
 
 const app = express();
 const host = process.env.CATALOG_HOST || '0.0.0.0';
 const port = Number.parseInt(process.env.CATALOG_PORT || '9000', 10);
-
-type CatalogItem = {
-  sku: string;
-  name: string;
-  category: string;
-  available: boolean;
-  listPrice: number;
-};
-
-type CatalogAvailability = {
-  sku: string;
-  available: boolean;
-  quantityOnHand: number;
-  backorderable: boolean;
-};
 
 const catalog: CatalogItem[] = [
   { sku: 'SKU-IPHONE', name: 'iPhone 15', category: 'Phones', available: true, listPrice: 799.0 },
