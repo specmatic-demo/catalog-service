@@ -12,11 +12,24 @@ type CatalogItem = {
   listPrice: number;
 };
 
+type CatalogAvailability = {
+  sku: string;
+  available: boolean;
+  quantityOnHand: number;
+  backorderable: boolean;
+};
+
 const catalog: CatalogItem[] = [
   { sku: 'SKU-IPHONE', name: 'iPhone 15', category: 'Phones', available: true, listPrice: 799.0 },
   { sku: 'SKU-PIXEL', name: 'Pixel 8', category: 'Phones', available: true, listPrice: 699.0 },
   { sku: 'SKU-HEADPHONE', name: 'Noise Cancelling Headphones', category: 'Audio', available: false, listPrice: 199.0 }
 ];
+
+const availabilityBySku: Record<string, CatalogAvailability> = {
+  'SKU-IPHONE': { sku: 'SKU-IPHONE', available: true, quantityOnHand: 12, backorderable: false },
+  'SKU-PIXEL': { sku: 'SKU-PIXEL', available: true, quantityOnHand: 7, backorderable: false },
+  'SKU-HEADPHONE': { sku: 'SKU-HEADPHONE', available: false, quantityOnHand: 0, backorderable: true }
+};
 
 app.get('/catalog/items', (req: Request, res: Response) => {
   const { category, q } = req.query;
@@ -67,6 +80,27 @@ app.get('/catalog/items/:sku', (req: Request, res: Response) => {
     available: true,
     listPrice: 99.0
   });
+});
+
+app.get('/catalog/items/:sku/availability', (req: Request, res: Response) => {
+  const { sku } = req.params;
+  const availability = availabilityBySku[sku];
+  if (availability) {
+    res.status(200).json(availability);
+    return;
+  }
+
+  res.status(200).json({
+    sku,
+    available: true,
+    quantityOnHand: 5,
+    backorderable: false
+  });
+});
+
+app.get('/catalog/categories', (_req: Request, res: Response) => {
+  const categories = Array.from(new Set(catalog.map((item) => item.category)));
+  res.status(200).json(categories);
 });
 
 app.listen(port, host, () => {
