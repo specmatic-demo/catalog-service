@@ -4,16 +4,16 @@ systemUnderTest:
     $ref: "#/components/services/catalogService"
 components:
   sources:
-    centralContractRepo:
-      git:
-        url: https://github.com/specmatic-demo/central-contract-repository
+    localSpecs:
+      filesystem:
+        directory: specs
   services:
     catalogService:
       description: "Catalog Service"
       definitions:
         - definition:
             source:
-              $ref: "#/components/sources/centralContractRepo"
+              $ref: "#/components/sources/localSpecs"
             specs:
               - spec:
-                  path: "contracts/services/catalog-service/http/openapi.yaml"
+                  path: "openapi.yaml"
