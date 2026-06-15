@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Catalog Service API
+  version: 1.1.0
+servers:
+  - url: https://catalog.internal.example.com
+paths:
+  /catalog/items:
+    get:
+      summary: Search catalog items
+      operationId: listCatalogItems
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of catalog items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogItem'
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /catalog/items/{sku}:
+    get:
+      summary: Fetch a catalog item by SKU
+      operationId: getCatalogItem
+      parameters:
+        - name: sku
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Catalog item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogItem'
+        '404':
+          description: Item not found
+  /catalog/items/{sku}/availability:
+    get:
+      summary: Get availability status for a SKU
+      operationId: getCatalogItemAvailability
+      parameters:
+        - name: sku
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SKU availability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogAvailability'
+        '404':
+          description: Item not found
+  /catalog/categories:
+    get:
+      summary: List catalog categories
+      operationId: listCatalogCategories
+      responses:
+        '200':
+          description: Available categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+components:
+  schemas:
+    CatalogItem:
+      type: object
+      required: [sku, name, category, available, listPrice]
+      properties:
+        sku:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        available:
+          type: boolean
+        listPrice:
+          type: number
+          format: double
+    CatalogAvailability:
+      type: object
+      required: [sku, available, quantityOnHand, backorderable]
+      properties:
+        sku:
+          type: string
+        available:
+          type: boolean
+        quantityOnHand:
+          type: integer
+          minimum: 0
+        backorderable:
+          type: boolean
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
