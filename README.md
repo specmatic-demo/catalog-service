@@ -2,7 +2,10 @@
 
 This is a federated provider repository.
 
-It provides the OpenAPI contract stored at [specs/openapi.yaml](/Users/jaydeep/znsio/specmatic-demo/catalog-service/specs/openapi.yaml).
+It provides these contracts from the local `specs` directory:
+
+- [specs/openapi.yaml](/Users/jaydeep/znsio/specmatic-demo/catalog-service/specs/openapi.yaml)
+- [specs/schema.graphql](/Users/jaydeep/znsio/specmatic-demo/catalog-service/specs/schema.graphql)
 
 ## Run the service
 
@@ -12,7 +15,8 @@ Run this from the `catalog-service` repository root:
 docker compose up --build
 ```
 
-This starts the service on `localhost:9000`, which matches [specmatic.yaml](/Users/jaydeep/znsio/specmatic-demo/catalog-service/specmatic.yaml).
+This starts the service on `localhost:9000`.
+It serves HTTP endpoints and the GraphQL endpoint at `http://localhost:9000/graphql`.
 
 ## Run contract tests
 
