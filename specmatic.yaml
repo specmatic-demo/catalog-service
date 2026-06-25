@@ -2,6 +2,10 @@ version: 3
 systemUnderTest:
   service:
     $ref: "#/components/services/catalogService"
+    runOptions:
+      graphqlsdl:
+        host: localhost
+        port: 9000
 components:
   sources:
     localSpecs:
@@ -17,3 +21,5 @@ components:
             specs:
               - spec:
                   path: "openapi.yaml"
+              - spec:
+                  path: "schema.graphql"

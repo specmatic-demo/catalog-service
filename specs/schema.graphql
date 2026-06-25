@@ -1,0 +1,16 @@
+schema {
+  query: Query
+}
+
+type Query {
+  catalogItems(category: String, limit: Int = 20): [CatalogItem!]!
+  catalogItemBySku(sku: String!): CatalogItem
+}
+
+type CatalogItem {
+  sku: String!
+  name: String!
+  category: String!
+  available: Boolean!
+  listPrice: Float!
+}
